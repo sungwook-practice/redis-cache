@@ -37,9 +37,9 @@ async def get_post(id: int, redis_session: redis.Redis = Depends(get_redis_sessi
   cache_ttl = 20
   cache_key = f"post:{id}"
 
-  # try except
-  response = httpx.get(f"https://jsonplaceholder.typicode.com/posts/{id}")
-  post = response.json()
+  async with httpx.AsyncClient() as client:
+    response = await client.get(f"https://jsonplaceholder.typicode.com/posts/{id}")
+    post = response.json()
 
   # write cache with TTL
   # raise Invalid input of type: 'dict'. Convert to a bytes, string, int or float first..
